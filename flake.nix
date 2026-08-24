@@ -29,6 +29,9 @@
           pkgs.mkalias
           pkgs.obsidian
           pkgs.uv
+          pkgs.fnm
+          pkgs.tfenv
+          pkgs.glab
           pkgs.codex
           pkgs.claude-code
           pkgs.awscli2
