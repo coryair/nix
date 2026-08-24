@@ -77,6 +77,59 @@
         done
       '';
 
+      # Manage macOS settings.
+      system.defaults = {
+        NSGlobalDomain = {
+          AppleInterfaceStyleSwitchesAutomatically = true;
+          NSAutomaticCapitalizationEnabled = true;
+          NSAutomaticPeriodSubstitutionEnabled = true;
+          "com.apple.trackpad.forceClick" = true;
+        };
+
+        dock = {
+          autohide = true;
+          launchanim = true;
+          orientation = "bottom";
+          show-process-indicators = true;
+          show-recents = false;
+          tilesize = 40;
+        };
+
+        finder = {
+          FXPreferredViewStyle = "Nlsv";
+          NewWindowTarget = "Recents";
+          ShowExternalHardDrivesOnDesktop = true;
+          ShowHardDrivesOnDesktop = false;
+          ShowRemovableMediaOnDesktop = true;
+        };
+      };
+
+      system.activationScripts.keyboardShortcuts.text = ''
+        shortcuts_plist="/Users/${config.system.primaryUser}/Library/Preferences/com.apple.symbolichotkeys.plist"
+
+        if ! sudo --user=${config.system.primaryUser} -- /usr/libexec/PlistBuddy \
+          -c "Print :AppleSymbolicHotKeys" "$shortcuts_plist" >/dev/null 2>&1; then
+          sudo --user=${config.system.primaryUser} -- /usr/libexec/PlistBuddy \
+            -c "Add :AppleSymbolicHotKeys dict" "$shortcuts_plist"
+        fi
+
+        # Screenshots, input-source switching, and Spotlight.
+        for shortcut_id in 28 29 30 31 184 60 61 64 65; do
+          if ! sudo --user=${config.system.primaryUser} -- /usr/libexec/PlistBuddy \
+            -c "Set :AppleSymbolicHotKeys:$shortcut_id:enabled false" "$shortcuts_plist"; then
+            if ! sudo --user=${config.system.primaryUser} -- /usr/libexec/PlistBuddy \
+              -c "Add :AppleSymbolicHotKeys:$shortcut_id:enabled bool false" "$shortcuts_plist"; then
+              sudo --user=${config.system.primaryUser} -- /usr/libexec/PlistBuddy \
+                -c "Add :AppleSymbolicHotKeys:$shortcut_id dict" "$shortcuts_plist"
+              sudo --user=${config.system.primaryUser} -- /usr/libexec/PlistBuddy \
+                -c "Add :AppleSymbolicHotKeys:$shortcut_id:enabled bool false" "$shortcuts_plist"
+            fi
+          fi
+        done
+
+        killall -u ${config.system.primaryUser} cfprefsd 2>/dev/null || true
+      '';
+
       # Necessary for using flakes on this system.
       nix.settings.experimental-features = "nix-command flakes";
 
