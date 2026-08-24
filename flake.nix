@@ -1,90 +1,104 @@
 {
-  description = "Cory's declarative machine configuration";
+  description = "Cory's nix-darwin system flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
-
-    nix-darwin = {
-      url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    home-manager = {
-      url = "github:nix-community/home-manager/release-26.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
-  outputs =
-    inputs@{
-      nixpkgs,
-      nix-darwin,
-      home-manager,
-      ...
-    }:
-    let
-      supportedSystems = [
-        "aarch64-darwin"
-        "x86_64-darwin"
-        "aarch64-linux"
-        "x86_64-linux"
-      ];
+  outputs = inputs@{ self, nix-darwin, nix-homebrew, nixpkgs }:
+  let
+    configuration = { config, pkgs, ... }: {
+      # List packages installed in system profile. To search by name, run:
+      # $ nix-env -qaP | grep wget
 
-      mkHome =
-        {
-          system,
-          userName,
-          homeDirectory,
-          ...
-        }:
-        home-manager.lib.homeManagerConfiguration {
-          pkgs = import nixpkgs { inherit system; };
-          extraSpecialArgs = { inherit userName homeDirectory; };
-          modules = [ ./home.nix ];
+      nixpkgs.config.allowUnfree = true;
+      system.primaryUser = "cory.hernandez";
+
+      nix-homebrew = {
+        enable = true;
+        user = "cory.hernandez";
+        autoMigrate = true;
+        enableRosetta = true;
+      };
+
+      environment.systemPackages =
+        [ pkgs.neovim
+          pkgs.mkalias
+          pkgs.obsidian
+          pkgs.uv
+          pkgs.codex
+          pkgs.claude-code
+          pkgs.awscli2
+
+        ];
+
+      homebrew = {
+        enable = true;
+        casks = [
+          "iina"
+          "firefox"
+          "ghostty"
+          "chatgpt"
+          "claude-code"
+          "wispr-flow"
+          "windows-app"
+          "orbstack"
+          "raycast"
+          "slack"
+          "utm"
+          "visual-studio-code"
+          "karabiner-elements"
+          "yaak"
+          "cleanshot"
+        ];
+        onActivation.cleanup = "zap";
+      };
+
+      system.activationScripts.applications.text = let
+        env = pkgs.buildEnv {
+          name = "system-applications";
+          paths = config.environment.systemPackages;
+          pathsToLink = [ "/Applications" ];
         };
+      in
+      pkgs.lib.mkForce ''
+        # Set up applications.
+        echo "setting up /Applications..." >&2
+        rm -rf /Applications/Nix\ Apps
+        mkdir -p /Applications/Nix\ Apps
+        find ${env}/Applications -maxdepth 1 -type l -exec readlink '{}' + |
+        while read -r src; do
+          app_name=$(basename "$src")
+          echo "copying $src" >&2
+          ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
+        done
+      '';
 
-      mkDarwin =
-        {
-          system,
-          userName,
-          homeDirectory,
-          hostName,
-          ...
-        }:
-        nix-darwin.lib.darwinSystem {
-          specialArgs = {
-            inherit
-              inputs
-              system
-              userName
-              homeDirectory
-              hostName
-              ;
-          };
-          modules = [
-            ./configuration.nix
-            home-manager.darwinModules.home-manager
-          ];
-        };
+      # Necessary for using flakes on this system.
+      nix.settings.experimental-features = "nix-command flakes";
 
-      mkConfiguration =
-        args: if nixpkgs.lib.hasSuffix "-darwin" args.system then mkDarwin args else mkHome args;
-    in
-    {
-      lib.mkConfiguration = mkConfiguration;
+      # Enable alternative shell support in nix-darwin.
+      # programs.fish.enable = true;
 
-      apps = nixpkgs.lib.genAttrs supportedSystems (
-        system:
-        let
-          isDarwin = nixpkgs.lib.hasSuffix "-darwin" system;
-        in
-        {
-          default = {
-            type = "app";
-            program = if isDarwin then "${nix-darwin.packages.${system}.darwin-rebuild}/bin/darwin-rebuild" else "${home-manager.packages.${system}.home-manager}/bin/home-manager";
-            meta.description = if isDarwin then "Apply the detected macOS configuration" else "Apply the detected Linux home configuration";
-          };
-        }
-      );
+      # Set Git commit hash for darwin-version.
+      system.configurationRevision = self.rev or self.dirtyRev or null;
+
+      # Used for backwards compatibility, please read the changelog before changing.
+      # $ darwin-rebuild changelog
+      system.stateVersion = 6;
+
+      # The platform the configuration will be used on.
+      nixpkgs.hostPlatform = "aarch64-darwin";
     };
+  in
+  {
+    # Build darwin flake using:
+    # $ darwin-rebuild build --flake .#simple
+    darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
+      modules = [ nix-homebrew.darwinModules.nix-homebrew configuration ];
+    };
+  };
 }
