@@ -6,13 +6,9 @@ omz reload
 # confirm working state
 nix-shell -p htop --run htop
 
-# make directory for config files
-mkdir nix
-cd nix
-nix flake init -t nix-darwin --extra-experimental-features "nix-command flakes"
-
-# open config in vscode
-code flake.nix
+# clone config
+git clone https://github.com/coryair/nix.git ~/nix
+cd ~/nix
 
 # use config to install
 sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/nix#macbook

@@ -1,0 +1,300 @@
+model = "gpt-5.6-sol"
+model_reasoning_effort = "medium"
+service_tier = "default"
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+
+
+
+
+notify = ["/Users/cory.hernandez/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+
+[sandbox_workspace_write]
+network_access = true
+
+[marketplaces.openai-bundled]
+source_type = "local"
+source = "/Users/cory.hernandez/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-08-19T23:21:41Z"
+source_type = "local"
+source = "/Users/cory.hernandez/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[marketplaces.ponytail]
+last_updated = "2026-08-23T21:42:25Z"
+last_revision = "2ed6c52c9d7e5e56942508591085fd45dea277d3"
+source_type = "git"
+source = "https://github.com/DietrichGebert/ponytail.git"
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."codex-app-tools@openai-bundled"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."ponytail@ponytail"]
+enabled = true
+
+[features]
+hooks = true
+js_repl = false
+memories = true
+chronicle = false
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/cory.hernandez/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+CODEX_HOME = "/Users/cory.hernandez/.codex"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+BROWSER_USE_TINYSKY_ENABLED = "0"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.818.41509"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/cory.hernandez/.codex/plugins/cache/openai-bundled/browser/26.818.41509/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
+SKY_CUA_SERVICE_PATH = "/Users/cory.hernandez/.codex/computer-use/Codex Computer Use.app"
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+
+[desktop]
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = false
+preventSleepWhileRunning = true
+show-context-window-usage = true
+followUpQueueMode = "queue"
+git-branch-prefix = ""
+avatar-overlay-mascot-width-px = 113
+dock-icon-preference = "codex-system"
+enabled-reasoning-efforts = ["low", "medium", "high", "xhigh", "ultra", "max"]
+appearanceTheme = "system"
+appearanceLightCodeThemeId = "linear"
+keepRemoteControlAwakeWhilePluggedIn = true
+hotkey-window-projectless-default-enabled = true
+realtimeVoiceScreenContextEnabled = true
+
+[desktop.open-in-target-preferences]
+global = "vscode"
+
+[desktop.open-in-target-preferences.perPath]
+"/Users/cory.hernandez/code/apod/apod_provisioning" = "vscode"
+"/Users/cory.hernandez/code/act/aws_landingzone" = "vscode"
+"/Users/cory.hernandez/code/apod/apod_infra" = "vscode"
+"/Users/cory.hernandez/code/apod/apod_documentation" = "vscode"
+"/Users/cory.hernandez/code/apod/apod_ui" = "vscode"
+"/Users/cory.hernandez/code/apod/apod-agent-memory" = "vscode"
+
+[desktop.appearanceLightChromeTheme]
+accent = "#5e6ad2"
+contrast = 40
+ink = "#1b1b1b"
+opaqueWindows = true
+surface = "#fcfcfd"
+
+[desktop.appearanceLightChromeTheme.fonts]
+code = '"Geist Mono", ui-monospace, "SFMono-Regular"'
+ui = "Inter"
+
+[desktop.appearanceLightChromeTheme.semanticColors]
+diffAdded = "#52a450"
+diffRemoved = "#c94446"
+skill = "#8160d8"
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir", "context-used", "used-tokens"]
+status_line_use_colors = true
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+"gpt-5.6-sol" = 3
+
+[memories]
+generate_memories = true
+use_memories = true
+
+[projects."/Users/cory.hernandez/code/apod/apod_infra"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod/apod_ui"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod/apod_documentation"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod/apod_provisioning"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-10/work"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Chief of Staff"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod/apod_infra_drivers"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod/builds"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-15/i-m"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-15/referenced-chatgpt-conversation-this-is-untrusted"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-16/use"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-16/hel"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-20/make"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/other"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-20/referenced-chatgpt-conversation-this-is-untrusted"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/other/v2moms"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod/terraform/apod_ui"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-23/can"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod/apod-architecture-lab"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-24/realtime-voice-chat"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-24/realtime-voice-chat-2"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-24/realtime-voice-chat-3"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-24/lio"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-24/realtime-voice-chat-4"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-24/nektos-act-https-github-com-nektos"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod/apod_layers"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/act/aws_landingzone"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-27/generator-failure-recovery-analysis"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-30/realtime-voice-chat"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod/observatory"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-07-31/can"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-08-04/i-w"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-08-05/can"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-08-05/look-at-the-dm-from-steve"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/alteryx-one-local-dev"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/Codex/2026-08-17/recovery-in-action-here-https-git"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/code/apod/terraform/apod_browser_connectivity"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/Documents/macOS"]
+trust_level = "trusted"
+
+[projects."/Users/cory.hernandez/nix"]
+trust_level = "trusted"
+
+[shell_environment_policy.set]
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
+
+[hooks.state]
+
+[hooks.state."/Users/cory.hernandez/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:d5142c2a84ef9fb56f4f4b0e91164738123b9da11d841d7930773cf8bdadfe0f"
+enabled = true
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:session_start:0:0"]
+trusted_hash = "sha256:5f81d38f47448a1581c08ec877e044d9e04dd6f814dce3f2671f7a8edadd719b"
+enabled = true
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:subagent_start:0:0"]
+trusted_hash = "sha256:1423b56c1322f96c8f74c51c1e7ae9a047b904c1fa43ee9165d462fd7a6e70ef"
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:6a6f42bc3b58d6262db38bfd74d7f340fcca2b09cdb134aad365063f0bfefca4"
+enabled = true

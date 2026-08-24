@@ -5,10 +5,12 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
-  outputs = inputs@{ self, nix-darwin, nix-homebrew, nixpkgs }:
+  outputs = inputs@{ self, home-manager, nix-darwin, nix-homebrew, nixpkgs }:
   let
     configuration = { config, pkgs, ... }: {
       # List packages installed in system profile. To search by name, run:
@@ -16,6 +18,8 @@
 
       nixpkgs.config.allowUnfree = true;
       system.primaryUser = "cory.hernandez";
+      users.users."cory.hernandez".home = "/Users/cory.hernandez";
+      environment.variables.ZDOTDIR = "/Users/cory.hernandez/.config/zsh";
 
       nix-homebrew = {
         enable = true;
@@ -154,7 +158,17 @@
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#simple
     darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
-      modules = [ nix-homebrew.darwinModules.nix-homebrew configuration ];
+      modules = [
+        nix-homebrew.darwinModules.nix-homebrew
+        home-manager.darwinModules.home-manager
+        configuration
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "hm-backup";
+          home-manager.users."cory.hernandez" = import ./home.nix;
+        }
+      ];
     };
   };
 }
