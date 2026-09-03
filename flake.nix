@@ -8,9 +8,13 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    zsh-bat = {
+      url = "github:fdellwing/zsh-bat";
+      flake = false;
+    };
   };
 
-  outputs = inputs@{ self, home-manager, nix-darwin, nix-homebrew, nixpkgs }:
+  outputs = inputs@{ self, home-manager, nix-darwin, nix-homebrew, nixpkgs, zsh-bat }:
   let
     configuration = { config, pkgs, ... }: {
       # List packages installed in system profile. To search by name, run:
@@ -20,6 +24,34 @@
       system.primaryUser = "cory.hernandez";
       users.users."cory.hernandez".home = "/Users/cory.hernandez";
       environment.variables.ZDOTDIR = "/Users/cory.hernandez/.config/zsh";
+
+      # Durable Codex settings, declared as the system config layer. Codex 0.149 merges
+      # config in the order: packaged defaults < managed config (system, i.e. this file)
+      # < project config < user config < session flags. Runtime state that Codex writes
+      # for itself -- [projects.*] trust levels, [hooks.state] trust hashes,
+      # [marketplaces.*], [plugins.*], [mcp_servers.*], [desktop] -- deliberately stays
+      # out of here and lives only in ~/.codex/config.toml.
+      environment.etc."codex/config.toml".text = ''
+        model = "gpt-5.6-luna"
+        model_reasoning_effort = "max"
+        plan_mode_reasoning_effort = "high"
+        service_tier = "default"
+        approvals_reviewer = "auto_review"
+
+        [features]
+        hooks = true
+
+        [tui]
+        status_line = ["model-with-reasoning", "current-dir", "run-state", "context-used", "five-hour-limit"]
+        status_line_use_colors = true
+
+        [model_providers.codex-lb]
+        name = "openai"  # required — enables remote /responses/compact. Lowercase since Codex 2026-05-23; older "OpenAI" stops resolving gpt-5.5
+        base_url = "http://127.0.0.1:2455/backend-api/codex"
+        wire_api = "responses"
+        supports_websockets = true
+        requires_openai_auth = true # required for codex app
+      '';
 
       nix-homebrew = {
         enable = true;
@@ -39,21 +71,25 @@
           pkgs.codex
           pkgs.claude-code
           pkgs.awscli2
+          pkgs.maccy
 
         ];
 
+      fonts.packages = [ pkgs.nerd-fonts.meslo-lg ];
+
       homebrew = {
         enable = true;
+        brews = [ "herdr" ];
         casks = [
           "iina"
           "firefox"
           "ghostty"
           "chatgpt"
+          "claude"
           "claude-code"
           "wispr-flow"
           "windows-app"
           "orbstack"
-          "raycast"
           "slack"
           "utm"
           "visual-studio-code"
@@ -61,7 +97,11 @@
           "yaak"
           "cleanshot"
         ];
-        onActivation.cleanup = "zap";
+        onActivation = {
+          autoUpdate = true;
+          upgrade = true;
+          cleanup = "zap";
+        };
       };
 
       system.activationScripts.applications.text = let
@@ -120,8 +160,8 @@
             -c "Add :AppleSymbolicHotKeys dict" "$shortcuts_plist"
         fi
 
-        # Screenshots, input-source switching, and Spotlight.
-        for shortcut_id in 28 29 30 31 184 60 61 64 65; do
+        # Screenshots and input-source switching.
+        for shortcut_id in 28 29 30 31 184 60 61; do
           if ! sudo --user=${config.system.primaryUser} -- /usr/libexec/PlistBuddy \
             -c "Set :AppleSymbolicHotKeys:$shortcut_id:enabled false" "$shortcuts_plist"; then
             if ! sudo --user=${config.system.primaryUser} -- /usr/libexec/PlistBuddy \
@@ -166,6 +206,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "hm-backup";
+          home-manager.extraSpecialArgs = { inherit zsh-bat; };
           home-manager.users."cory.hernandez" = import ./home.nix;
         }
       ];

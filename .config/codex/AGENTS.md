@@ -9,6 +9,9 @@
 - When writing commit messages, NEVER auto-add your agent name as co-author
 - When making technical decisions, do not give much weight to development cost. Instead, prefer quality, simplicity, robustness, scalability, and long term maintainability.
 - When doing bug fixes, always start with reproducing the bug in an E2E setting as closely aligned with how an end user would experience it as possible. This makes sure you find the real problem so your fix will actually solve it.
+- When changing configuration that a running application reads, inspect the resolved live configuration before and after the change. Do not assume a repository file, Home Manager symlink, generated file, or cached in-memory configuration is what the application is currently using. Applications may replace managed symlinks with standalone files.
+- For operating system configuration, prioritize the Nix configuration as the source of truth. Apply and validate the resolved live configuration before considering the task complete.
+- For Karabiner changes, compare the repository JSON with `~/.config/karabiner/karabiner.json`, verify the active file contains the intended rules and no stale rules, then force a real reload without using `karabiner_cli --select-profile` because it may replace the Home Manager symlink with stale content. Reproduce the shortcut through the live Karabiner event path and do not claim it works based only on JSON validation or directly executing a shell command.
 - When end-to-end testing a product, be picky about the UI you see and be obsessed with pixel perfection.
   If something clearly looks off, even if it is not directly related to what you are doing, try to get it fixed along the way.
 - Apply that same high standard to engineering excellence: lint, test failures, and test flakiness.

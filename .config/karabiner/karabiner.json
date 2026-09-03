@@ -86,6 +86,52 @@
                         ]
                     },
                     {
+                        "description": "Toggle apps with Caps shortcuts",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "s",
+                                    "modifiers": { "mandatory": ["command", "control", "option", "shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "state_file=/private/tmp/karabiner-toggle-slack-$(/usr/bin/id -u); frontmost=$(/usr/bin/osascript -e 'tell application \"System Events\" to get bundle identifier of first application process whose frontmost is true'); if [ \"$frontmost\" = \"com.tinyspeck.slackmacgap\" ]; then previous=$(/bin/cat \"$state_file\" 2>/dev/null); if [ -n \"$previous\" ]; then /usr/bin/open -b \"$previous\"; fi; else /usr/bin/printf '%s\\n' \"$frontmost\" > \"$state_file\"; /usr/bin/open -b com.tinyspeck.slackmacgap; fi"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "t",
+                                    "modifiers": { "mandatory": ["command", "control", "option", "shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "state_file=/private/tmp/karabiner-toggle-ghostty-$(/usr/bin/id -u); frontmost=$(/usr/bin/osascript -e 'tell application \"System Events\" to get bundle identifier of first application process whose frontmost is true'); if [ \"$frontmost\" = \"com.mitchellh.ghostty\" ]; then previous=$(/bin/cat \"$state_file\" 2>/dev/null); if [ -n \"$previous\" ]; then /usr/bin/open -b \"$previous\"; fi; else /usr/bin/printf '%s\\n' \"$frontmost\" > \"$state_file\"; /usr/bin/open -b com.mitchellh.ghostty; fi"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Toggle dark and light mode with Caps+D",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "d",
+                                    "modifiers": { "mandatory": ["command", "control", "option", "shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Double-tap left ⌘ within 300ms to send real F12 (uses fn+F12 to bypass media keys)",
                         "enabled": false,
                         "manipulators": [
