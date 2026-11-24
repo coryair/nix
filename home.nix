@@ -28,7 +28,7 @@ let
 in
 {
   home.stateVersion = "26.05";
-  home.packages = [ pkgs.bat pkgs.fd pkgs.pre-commit pkgs.ripgrep ];
+  home.packages = [ pkgs.bat pkgs.fd pkgs.ripgrep ];
 
   home.file = {
     ".hushlogin".source = link "shell/.hushlogin";
@@ -51,6 +51,7 @@ in
 
   xdg.enable = true;
   xdg.configFile = {
+    "zsh/.zshenv".source = link "zsh/.zshenv";
     "zsh/.zshrc".source = link "zsh/.zshrc";
     "zsh/.zprofile".source = link "zsh/.zprofile";
     "zsh/.p10k.zsh".source = link "zsh/.p10k.zsh";

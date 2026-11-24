@@ -111,6 +111,18 @@
                                     }
                                 ],
                                 "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "r",
+                                    "modifiers": { "mandatory": ["command", "control", "option", "shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "state_file=/private/tmp/karabiner-toggle-reminders-$(/usr/bin/id -u); frontmost=$(/usr/bin/osascript -e 'tell application \"System Events\" to get bundle identifier of first application process whose frontmost is true'); if [ \"$frontmost\" = \"com.apple.reminders\" ]; then previous=$(/bin/cat \"$state_file\" 2>/dev/null); if [ -n \"$previous\" ]; then /usr/bin/open -b \"$previous\"; fi; else /usr/bin/printf '%s\\n' \"$frontmost\" > \"$state_file\"; /usr/bin/open -b com.apple.reminders; fi"
+                                    }
+                                ],
+                                "type": "basic"
                             }
                         ]
                     },

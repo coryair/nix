@@ -168,3 +168,8 @@ export PATH="$HOME/.local/bin:$PATH"
 # Developer environment
 alias devenv="$HOME/code/developer-env/bin/dev"
 alias devenv-rebuild="$HOME/code/developer-env/bin/rebuild"
+
+# Rex: keep its bin directory ahead of everything prepended above. Must stay last.
+if [ -n "$REX_BIN_DIR" ]; then
+  export PATH="$REX_BIN_DIR:$PATH"
+fi

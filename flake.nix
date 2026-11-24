@@ -25,6 +25,13 @@
       users.users."cory.hernandez".home = "/Users/cory.hernandez";
       environment.variables.ZDOTDIR = "/Users/cory.hernandez/.config/zsh";
 
+      # Rex: nix-darwin resets PATH on every shell start, so re-add Rex's bin directory.
+      environment.interactiveShellInit = ''
+        if [ -n "$REX_BIN_DIR" ]; then
+          export PATH="$REX_BIN_DIR:$PATH"
+        fi
+      '';
+
       # Durable Codex settings, declared as the system config layer. Codex 0.149 merges
       # config in the order: packaged defaults < managed config (system, i.e. this file)
       # < project config < user config < session flags. Runtime state that Codex writes
@@ -68,7 +75,6 @@
           pkgs.fnm
           pkgs.tfenv
           pkgs.glab
-          pkgs.codex
           pkgs.claude-code
           pkgs.awscli2
           pkgs.maccy
@@ -79,11 +85,12 @@
 
       homebrew = {
         enable = true;
-        brews = [ "herdr" ];
+        brews = [ "herdr" "gh" "vercel" ];
         casks = [
           "iina"
           "firefox"
           "ghostty"
+          "codex"
           "chatgpt"
           "claude"
           "claude-code"
@@ -93,6 +100,8 @@
           "slack"
           "utm"
           "visual-studio-code"
+          "zed"
+          "t3-code@nightly"
           "karabiner-elements"
           "yaak"
           "cleanshot"
@@ -100,7 +109,7 @@
         onActivation = {
           autoUpdate = true;
           upgrade = true;
-          cleanup = "zap";
+          cleanup = "uninstall";
         };
       };
 

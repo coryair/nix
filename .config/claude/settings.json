@@ -1,9 +1,8 @@
 {
-  "model": "sonnet",
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "*",
+        "matcher": "^(startup|resume|clear|compact|fork)$",
         "hooks": [
           {
             "type": "command",
@@ -18,9 +17,7 @@
     "type": "command",
     "command": "bash '/Users/cory.hernandez/.claude/statusline-command.sh'"
   },
-  "enabledPlugins": {
-    "ponytail@ponytail": true
-  },
+  "enabledPlugins": {},
   "extraKnownMarketplaces": {
     "ponytail": {
       "source": {
@@ -30,10 +27,50 @@
     }
   },
   "effortLevel": "high",
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "medium"
+    }
+  },
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
   "theme": "auto",
-  "voiceEnabled": true
+  "switchModelsOnFlag": true,
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(terraform apply:*) in environment/prod-01/** — Protected-Scope IaC Apply / Production Deploy overlap, prod namespace writes"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: Alteryx (git.alteryx.com) — inferred from origin remote host",
+      "**Cloud provider(s)**: AWS, Azure, GCP — inferred from Terraform modules present in this repo (helpers/terraform/azure_*, modules/custom/bigquery_gcp, modules/custom/cloud_aws, etc.)",
+      "**Repository visibility**: not queryable via gh (unsupported/GHE host git.alteryx.com); assume private per shipped default — no evidence of public visibility",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: None configured",
+      "**Default / protected branches**: main (default branch); protection/ruleset status not queryable via gh for this host — treat as unverified",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine with open internet",
+      "**Source control**: git.alteryx.com/apod/apod_provisioning (this repo and its origin remote only)",
+      "**Trusted internal domains**: git.alteryx.com",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: environment/*/backend.tf, environment/global_locals.tf, helpers/terraform/**/*_user.tf, helpers/terraform/**/seed_detail.tf, helpers/terraform/azure_synapsedwh/logins.tf, helpers/terraform/**/password.tf, sa-key.json (gitignored) — share only with audiences cleared at the named+specifics bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: environment/prod-01/backend.tf and any namespace/host/container with `prod` or `production` as a whole word or name segment",
+      "**Protected deployment namespaces / environments**: environment/prod-01/** (provisioning config targeting the prod environment)",
+      "**Protected IaC scopes**: environment/prod-01/backend.tf and other IAM/RBAC/networking/quota/node-pool resources whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (APOD provisioning — Terraform modules, CICD helpers, seed scripts)",
+      "**Trusted repo**: git.alteryx.com/apod/apod_provisioning (this repo, working directory) and its origin remote",
+      "**Org-specific CLIs**: apod-cli (29× in shell history), glab (6× in this project's transcripts)",
+      "**routine under this project prefix**: linting/testing scoped to files changed against origin/main, run via Docker using CI-resolved image versions, per CLAUDE.md"
+    ]
+  },
+  "voiceEnabled": true,
+  "model": "opus"
 }

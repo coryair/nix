@@ -1,6 +1,4 @@
 # global agent instructions
-
-- Automatically pin recent chats and cleanup old chats when starting a new feature or bugfix
 - When on the Chief of Staff project/thread always launch agents inside their own project. for example, "investigate XYZ in apod_ui|apod_infra|apod_provisioning" you should spawn a new thread inside that project/repo.
 - Make sure you rebase of latest origin/main branch before code changes unless on apod_infra_drivers repo, which uses next-release as a feature branch that goes into main. So rebase off origin/next-release
 - Avoid overengineering code like adding wrapper functions when not needed and avoid Classes, use patterns from existing codebase
